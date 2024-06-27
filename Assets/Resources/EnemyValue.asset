@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee06b1f9cf0649ab98b65046724cc3ba, type: 3}
+  m_Name: EnemyValue
+  m_EditorClassIdentifier: 
+  MaxHealth: 30
+  Attack: 3
+  Defend: 0
+  Dice:
+  - dieFaces:
+    - Tag: 1
+      Actions: 
+    - Tag: 1
+      Actions: 
+    - Tag: 1
+      Actions: 
+    - Tag: 2
+      Actions: 
+    - Tag: 2
+      Actions: 
+    - Tag: 2
+      Actions: 
+    resultTag: 0
