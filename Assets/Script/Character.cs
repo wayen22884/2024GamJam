@@ -6,7 +6,8 @@ using Random = System.Random;
 public class Character
 {
     private List<Die> diceOrigin;
-    private List<Die> dice;
+    private Queue<Die> dice = new();
+    private Queue<Die> usedDice = new();
     private BaseData baseData;
 
     private Random random = new();
@@ -18,20 +19,34 @@ public class Character
     }
     public void StartBattle()
     {
-        dice = diceOrigin.ToArray().ToList();
+        var list = diceOrigin.OrderBy(x => random.Next()).ToList();
+        list.ForEach(die => dice.Enqueue(die));
     }
     public List<Die> RollDice(int targetCount)
     {
         int finalCount = Mathf.Min(dice.Count,targetCount);
-        var selectedNumbers = Utility.SelectNumbers(random,dice.Count, finalCount);
         var result = new List<Die>();
-        foreach (var index in selectedNumbers)
+
+        for (int i = 0; i < finalCount; i++)
         {
-            var die = dice[index];
-            result.Add(die);
-            die.Roll();
+            result.Add(RollDie());
         }
         return result;
     }
 
+    public bool HasDice => dice.Count > 0;
+    public Die RollDie()
+    {
+        var die = dice.Dequeue();
+        usedDice.Enqueue(die);
+        die.Roll();
+        return die;
+    }
+
+    public void RecycleDice()
+    {
+        var list = usedDice.OrderBy(x => random.Next()).ToList();
+        usedDice.Clear();
+        list.ForEach(die => dice.Enqueue(die));
+    }
 }

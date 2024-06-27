@@ -40,6 +40,8 @@ public class BattleManger : MonoBehaviour
     }
     private void StartTurn()
     {
+        player.RecycleDice();
+        enemy.RecycleDice();
         var result= RollDice();
         UI.PlayEnemyDice(result.enemy);
     }
@@ -48,4 +50,18 @@ public class BattleManger : MonoBehaviour
     {
         return (player.RollDice(2), enemy.RollDice(1));
     }
+    [ContextMenu("RollEnemyDice")]
+    public void RollEnemyDice()
+    {
+        if (enemy.HasDice)
+        {
+            var die= enemy.RollDie();
+            UI.PlayEnemyDie(die);
+        }
+        else
+        {
+            UI.NoDie();
+        }
+    }
+    
 }

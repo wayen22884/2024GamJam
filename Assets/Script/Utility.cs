@@ -28,6 +28,10 @@ public static class Utility
     {
         return SelectNumbers(random, range, count);
     }
+    public static int RandomNumber(Random random,int range)
+    {
+        return random.Next(0,range);
+    }
     public static Sprite GetSprite(Die.DieFaceTag tag)
     {
         return sprites[tag];
