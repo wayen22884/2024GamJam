@@ -12,13 +12,11 @@ public class Die
     public class DieFace
     {
         public DieFaceTag Tag;
-        public List<Action> Actions;
         public DieFace(){}
 
         public DieFace(DieFace dieFace)
         {
             Tag = dieFace.Tag;
-            Actions = dieFace.Actions.ToArray().ToList();
         }
     }
     public enum DieFaceTag
@@ -40,7 +38,7 @@ public class Die
 
     public List<DieFace> dieFaces;
     public List<DieFaceTag> dieFaceTags=>dieFaces.Select(p=>p.Tag).ToList();
-    [FormerlySerializedAs("result")] public DieFaceTag resultTag;
+    public DieFaceTag resultTag;
     public DieFace Roll()
     {
         var resultIndexes= Utility.SelectNumbers(dieFaces.Count, 1);

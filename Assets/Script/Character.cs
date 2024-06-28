@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 using Random = System.Random;
 
 public class Character
 {
+    private string id;
     private List<Die> diceOrigin;
     private Queue<Die> dice = new();
     private Queue<Die> usedDice = new();
@@ -12,10 +14,25 @@ public class Character
 
     private Random random = new();
 
+    private ReactiveProperty<int> health=new();
+    private ReactiveProperty<int> attack=new();
+    private ReactiveProperty<int> defend=new();
+    public int Health => health.Value;
+    public int Attack => attack.Value;
+    public int Defend => defend.Value;
+
+    public Character(string id)
+    {
+        this.id = id;
+    }
     public void Initialize(BaseData baseData,List<Die> dice)
     {
+        health.Subscribe(value => Debug.Log($"{id} Health:{value}"));
         this.baseData = baseData;
         diceOrigin = dice;
+        health.Value = this.baseData.MaxHealth;
+        attack.Value = this.baseData.Attack;
+        defend.Value = this.baseData.Defend;
     }
     public void StartBattle()
     {
@@ -48,5 +65,22 @@ public class Character
         var list = usedDice.OrderBy(x => random.Next()).ToList();
         usedDice.Clear();
         list.ForEach(die => dice.Enqueue(die));
+    }
+
+    public void CauseDamage(Character other)
+    {
+        var damage = other.Attack - Defend;
+        health.Value -= damage;
+    }
+
+    public void CauseDamageWithDefend(Character other)
+    {
+        var damage = other.Attack - Defend*2;
+        health.Value -= damage;
+    }
+
+    public void Recover()
+    {
+        health.Value += Attack;
     }
 }

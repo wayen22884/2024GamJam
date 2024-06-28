@@ -30,4 +30,9 @@ public class DiceView : MonoBehaviour
     {
         Roll(TestDieFaces,resultFace);
     }
+
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
+    }
 }
