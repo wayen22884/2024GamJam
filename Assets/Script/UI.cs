@@ -7,9 +7,14 @@ public class UI: MonoBehaviour
 {
     public dicePool dicePool;
     public Button NextTurn;
+    public SlotManager SlotManager;
 
+    public void Initialize()
+    {
+        SlotManager.Initialize();
+    }
 
-    public void PlayEnemyDice(List<Die> enemy,Action onComplete=null)
+    private void PlayEnemyDice(List<Die> enemy,Action onComplete=null)
     {
         if (enemy.Count<=0)
         {
@@ -25,7 +30,7 @@ public class UI: MonoBehaviour
         PlayEnemyDie(die.dieFaceTags,die.resultTag);
     }
 
-    public void PlayPlayerDice(List<Die> player,Action onComplete=null)
+    private void PlayPlayerDice(List<Die> player,Action onComplete=null)
     {
         if (player.Count<=0)
         {
@@ -42,11 +47,28 @@ public class UI: MonoBehaviour
         Debug.LogError("NoDie");
     }
 
+    private void DecideRange()
+    {
+        SlotManager.DecideRange();
+    }
     private void PlayEnemyDie(List<Die.DieFaceTag> faceTags,Die.DieFaceTag result,Action onComplete=null)
     {
         dicePool.PlayEnemyDice(faceTags,result);
     }
 
+    public void ShowDice(List<Die> playerResult, List<Die> enemyResult)
+    {
+        PlayPlayerDice(playerResult);
+        PlayEnemyDice(enemyResult);
+        DecideRange();
+    }
+
+
+    public void SetSwapCallBack(Action<int, int> swapPlayerDiceResult)
+    {
+        SlotManager.SwapCallBack += swapPlayerDiceResult;
+        SlotManager.SwapCallBack += dicePool.SwapPlayerDiceResult;
+    }
 }
 [Serializable]
 public class dicePool
@@ -83,5 +105,10 @@ public class dicePool
         {
             pDiceView.SetActive(false);
         }
+    }
+
+    public void SwapPlayerDiceResult(int arg1, int arg2)
+    {
+        (player[arg1], player[arg2]) = (player[arg2], player[arg1]);
     }
 }

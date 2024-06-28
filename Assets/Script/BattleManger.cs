@@ -1,16 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class BattleManger : MonoBehaviour
 {
     public UI UI;
-    
     public Character player=new("player");
     public Character enemy=new("enemy");
     public bool Test;
@@ -20,6 +14,7 @@ public class BattleManger : MonoBehaviour
     private void Awake()
     {
         Utility.Initialize();
+        UI.Initialize();
         if (Test)
         {
             var playerData= Resources.Load<CharacterValue>("PlayerValue");
@@ -37,6 +32,7 @@ public class BattleManger : MonoBehaviour
     private void Initialize()
     {
         UI.NextTurn.onClick.AddListener(Battle);
+        UI.SetSwapCallBack(SwapPlayerDiceResult);
     }
 
     private void GameStart()
@@ -57,6 +53,7 @@ public class BattleManger : MonoBehaviour
         }
         EndAndNextTurn();
     }
+    
 
     private Die.DieFaceTag GetDie(List<Die> result, int i)
     {
@@ -73,8 +70,7 @@ public class BattleManger : MonoBehaviour
         player.RecycleDice();
         enemy.RecycleDice();
         (playerResult,enemyResult)= RollDice();
-        UI.PlayPlayerDice(playerResult);
-        UI.PlayEnemyDice(enemyResult);
+        UI.ShowDice(playerResult,enemyResult);
     }
 
     private (List<Die> player,List<Die> enemy) RollDice()
@@ -94,7 +90,11 @@ public class BattleManger : MonoBehaviour
             UI.NoDie();
         }
     }
-    
+
+    private void SwapPlayerDiceResult(int index1, int index2)
+    {
+        (playerResult[index1], playerResult[index2]) = (playerResult[index2], playerResult[index1]);
+    }
 }
 
 public static class BattleLogic
@@ -199,4 +199,3 @@ public static class BattleLogic
         }
     }
 }
-
